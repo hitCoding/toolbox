@@ -7,6 +7,7 @@ const categoryStyles = {
 
 const defaultTools = [
   { id: "serial", name: "串口调试", url: "serial.html", description: "在浏览器中连接串口设备并收发数据", category: "developer", internal: true },
+  { id: "codec", name: "数据转换", url: "codec.html", description: "Base64、HEX、Modbus CRC16 与时间戳转换", category: "utility", internal: true },
   { id: "chatgpt", name: "ChatGPT", url: "https://chatgpt.com", description: "写作、分析、编程与创意工作的 AI 助手", category: "ai" },
   { id: "claude", name: "Claude", url: "https://claude.ai", description: "长文档阅读、推理和内容协作", category: "ai" },
   { id: "github", name: "GitHub", url: "https://github.com", description: "代码托管、项目协作与自动化", category: "developer" },

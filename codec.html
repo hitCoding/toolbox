@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f4f5f7" />
+    <title>数据转换 · Toolbox</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="codec.css" />
+    <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
+    <script src="codec.js" defer></script>
+  </head>
+  <body class="codec-body">
+    <header class="codec-header">
+      <a class="codec-brand" href="index.html"><span class="brand-mark"><i data-lucide="blocks"></i></span><strong>Toolbox</strong></a>
+      <span></span>
+      <h1>数据转换</h1>
+      <a class="icon-button" href="index.html" aria-label="返回工具箱" title="返回工具箱"><i data-lucide="x"></i></a>
+    </header>
+
+    <main class="codec-main">
+      <nav class="codec-tabs" aria-label="转换工具">
+        <button class="active" data-tab="base64"><i data-lucide="binary"></i><span>Base64 / HEX</span></button>
+        <button data-tab="crc"><i data-lucide="shield-check"></i><span>Modbus CRC16</span></button>
+        <button data-tab="timestamp"><i data-lucide="clock-3"></i><span>时间戳</span></button>
+      </nav>
+
+      <section class="tool-pane active" id="base64Pane">
+        <div class="pane-heading"><div><h2>Base64 / HEX 转换</h2><p>原始字节在文本、十六进制和 Base64 之间转换</p></div><button class="secondary-button" id="base64Clear"><i data-lucide="trash-2"></i>清空</button></div>
+        <div class="converter-grid">
+          <div class="data-editor">
+            <div class="editor-bar"><label>输入格式<select id="sourceFormat"><option value="text">文本 UTF-8</option><option value="hex" selected>HEX 十六进制</option><option value="base64">Base64</option></select></label><button class="icon-button" id="pasteSource" aria-label="粘贴" title="粘贴"><i data-lucide="clipboard-paste"></i></button></div>
+            <textarea id="sourceData" spellcheck="false" placeholder="例如：01 03 00 00 00 0A"></textarea>
+            <div class="editor-meta"><span id="sourceBytes">0 字节</span><span id="sourceError"></span></div>
+          </div>
+          <div class="convert-actions"><button class="primary-button" id="convertButton" aria-label="转换"><i data-lucide="arrow-right"></i></button><button class="icon-button" id="swapButton" aria-label="交换格式" title="交换格式"><i data-lucide="arrow-left-right"></i></button></div>
+          <div class="data-editor">
+            <div class="editor-bar"><label>输出格式<select id="targetFormat"><option value="text">文本 UTF-8</option><option value="hex">HEX 十六进制</option><option value="base64" selected>Base64</option></select></label><button class="icon-button" id="copyTarget" aria-label="复制结果" title="复制结果"><i data-lucide="copy"></i></button></div>
+            <textarea id="targetData" readonly spellcheck="false" placeholder="转换结果"></textarea>
+            <div class="editor-meta"><span id="targetBytes">0 字节</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="tool-pane" id="crcPane">
+        <div class="pane-heading"><div><h2>Modbus CRC16</h2><p>多项式 0xA001，初始值 0xFFFF</p></div><button class="secondary-button" id="crcClear"><i data-lucide="trash-2"></i>清空</button></div>
+        <div class="crc-layout">
+          <div class="data-editor crc-editor">
+            <div class="editor-bar"><strong>HEX 数据</strong><button class="icon-button" id="pasteCrc" aria-label="粘贴" title="粘贴"><i data-lucide="clipboard-paste"></i></button></div>
+            <textarea id="crcInput" spellcheck="false" placeholder="01 03 00 00 00 0A"></textarea>
+            <div class="editor-meta"><span id="crcBytes">0 字节</span><span id="crcError"></span></div>
+            <button class="primary-button calculate-button" id="crcCalculate"><i data-lucide="calculator"></i>计算 CRC</button>
+          </div>
+          <div class="crc-results">
+            <div><span>CRC 寄存器值</span><strong id="crcValue">----</strong><button class="icon-button copy-value" data-copy-id="crcValue" aria-label="复制 CRC 值"><i data-lucide="copy"></i></button></div>
+            <div><span>发送线序（低位在前）</span><strong id="crcWire">-- --</strong><button class="icon-button copy-value" data-copy-id="crcWire" aria-label="复制发送线序"><i data-lucide="copy"></i></button></div>
+            <div><span>高位在前</span><strong id="crcHighFirst">-- --</strong><button class="icon-button copy-value" data-copy-id="crcHighFirst" aria-label="复制高位结果"><i data-lucide="copy"></i></button></div>
+            <div class="full-result"><span>追加 CRC 后的数据</span><code id="crcAppended">--</code><button class="icon-button copy-value" data-copy-id="crcAppended" aria-label="复制完整数据"><i data-lucide="copy"></i></button></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="tool-pane" id="timestampPane">
+        <div class="pane-heading"><div><h2>时间戳转换</h2><p>Unix 秒、毫秒与日期时间双向转换</p></div><button class="secondary-button" id="useNow"><i data-lucide="timer-reset"></i>当前时间</button></div>
+        <div class="time-layout">
+          <div class="time-block">
+            <label>Unix 时间戳<div class="input-with-action"><input id="timestampInput" inputmode="numeric" placeholder="例如：1788156000" /><button class="primary-button" id="timestampConvert"><i data-lucide="arrow-down"></i>转换</button></div></label>
+            <div class="time-results">
+              <div><span>单位</span><strong id="detectedUnit">--</strong></div>
+              <div><span>本地时间</span><strong id="localResult">--</strong><button class="icon-button copy-value" data-copy-id="localResult" aria-label="复制本地时间"><i data-lucide="copy"></i></button></div>
+              <div><span>UTC / ISO 8601</span><strong id="utcResult">--</strong><button class="icon-button copy-value" data-copy-id="utcResult" aria-label="复制 UTC 时间"><i data-lucide="copy"></i></button></div>
+            </div>
+          </div>
+          <div class="time-block">
+            <label>日期时间<input id="dateInput" type="datetime-local" step="0.001" /></label>
+            <button class="primary-button date-button" id="dateConvert"><i data-lucide="arrow-down"></i>生成时间戳</button>
+            <div class="timestamp-cards">
+              <div><span>秒</span><strong id="secondsResult">--</strong><button class="icon-button copy-value" data-copy-id="secondsResult" aria-label="复制秒时间戳"><i data-lucide="copy"></i></button></div>
+              <div><span>毫秒</span><strong id="millisecondsResult">--</strong><button class="icon-button copy-value" data-copy-id="millisecondsResult" aria-label="复制毫秒时间戳"><i data-lucide="copy"></i></button></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <div class="toast" id="codecToast" role="status" aria-live="polite"></div>
+  </body>
+</html>
