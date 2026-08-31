@@ -11,7 +11,7 @@ const defaultTools = [
   { id: "codec", name: "数据转换", url: "codec.html", description: "Base64、HEX、Modbus CRC16 与时间戳转换", category: "utility", internal: true },
   { id: "chatgpt", name: "ChatGPT", url: "https://chatgpt.com", description: "写作、分析、编程与创意工作的 AI 助手", category: "ai" },
   { id: "claude", name: "Claude", url: "https://claude.ai", description: "长文档阅读、推理和内容协作", category: "ai" },
-  { id: "easyeda-agent", name: "EasyEDA Agent", url: "https://github.com/zhoushoujianwork/easyeda-agent", description: "EDA / 硬件设计：用 AI 自动化绘制与检查原理图、PCB", category: "skills" },
+  { id: "easyeda-agent", name: "嘉立创EDA EasyEDA Agent", url: "https://github.com/zhoushoujianwork/easyeda-agent", description: "EDA / 硬件设计：用 AI 自动化绘制与检查原理图、PCB", category: "skills" },
   { id: "github", name: "GitHub", url: "https://github.com", description: "代码托管、项目协作与自动化", category: "developer" },
   { id: "codepen", name: "CodePen", url: "https://codepen.io", description: "快速编写和分享前端代码片段", category: "developer" },
   { id: "figma", name: "Figma", url: "https://www.figma.com", description: "界面设计、原型制作与团队协作", category: "design" },
