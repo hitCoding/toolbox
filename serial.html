@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#202329" />
+    <title>串口调试 · Toolbox</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="serial.css" />
+    <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
+    <script src="serial.js" defer></script>
+  </head>
+  <body class="serial-body">
+    <header class="serial-header">
+      <a class="serial-brand" href="index.html"><span class="brand-mark"><i data-lucide="blocks"></i></span><strong>Toolbox</strong></a>
+      <span class="header-divider"></span>
+      <h1>串口调试</h1>
+      <div class="connection-state" id="connectionState"><span></span><b>未连接</b></div>
+      <button class="secondary-button" id="disconnectButton" disabled><i data-lucide="unplug"></i>断开</button>
+      <button class="primary-button" id="connectButton"><i data-lucide="usb"></i>选择串口</button>
+    </header>
+
+    <main class="serial-workspace">
+      <aside class="serial-settings">
+        <section>
+          <div class="panel-title"><h2>连接参数</h2><i data-lucide="settings-2"></i></div>
+          <label>波特率<select id="baudRate"><option>9600</option><option>19200</option><option>38400</option><option>57600</option><option selected>115200</option><option>230400</option><option>460800</option><option>921600</option></select></label>
+          <div class="field-pair">
+            <label>数据位<select id="dataBits"><option>7</option><option selected>8</option></select></label>
+            <label>停止位<select id="stopBits"><option selected>1</option><option>2</option></select></label>
+          </div>
+          <label>校验位<select id="parity"><option value="none">无</option><option value="even">偶校验</option><option value="odd">奇校验</option></select></label>
+          <label>流控制<select id="flowControl"><option value="none">无</option><option value="hardware">硬件</option></select></label>
+        </section>
+        <section>
+          <div class="panel-title"><h2>控制信号</h2><i data-lucide="circuit-board"></i></div>
+          <label class="switch-row"><span><b>DTR</b><small>Data Terminal Ready</small></span><input type="checkbox" id="dtr" /><i></i></label>
+          <label class="switch-row"><span><b>RTS</b><small>Request To Send</small></span><input type="checkbox" id="rts" /><i></i></label>
+        </section>
+        <section class="session-stats">
+          <div class="panel-title"><h2>会话统计</h2><i data-lucide="activity"></i></div>
+          <dl><div><dt>接收</dt><dd id="rxBytes">0 B</dd></div><div><dt>发送</dt><dd id="txBytes">0 B</dd></div></dl>
+        </section>
+      </aside>
+
+      <section class="terminal-panel">
+        <div class="terminal-toolbar">
+          <div class="segmented" id="receiveMode"><button class="active" data-mode="text">文本</button><button data-mode="hex">HEX</button></div>
+          <label class="check-control"><input type="checkbox" id="timestamp" checked />时间戳</label>
+          <label class="check-control"><input type="checkbox" id="autoScroll" checked />自动滚动</label>
+          <span class="toolbar-spacer"></span>
+          <button class="icon-button" id="exportLog" aria-label="导出日志" title="导出日志"><i data-lucide="download"></i></button>
+          <button class="icon-button" id="clearLog" aria-label="清空日志" title="清空日志"><i data-lucide="trash-2"></i></button>
+        </div>
+        <div class="terminal-output" id="terminalOutput"><div class="system-line">等待串口连接</div></div>
+        <form class="send-panel" id="sendForm">
+          <textarea id="sendInput" rows="2" placeholder="输入要发送的数据" disabled></textarea>
+          <div class="send-options">
+            <div class="segmented" id="sendMode"><button type="button" class="active" data-mode="text">文本</button><button type="button" data-mode="hex">HEX</button></div>
+            <select id="lineEnding" aria-label="行结束符"><option value="none">无结束符</option><option value="lf">LF</option><option value="cr">CR</option><option value="crlf" selected>CRLF</option></select>
+            <span>Ctrl + Enter</span>
+            <button class="primary-button send-button" id="sendButton" disabled><i data-lucide="send"></i>发送</button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <div class="unsupported" id="unsupported" hidden><div><i data-lucide="triangle-alert"></i><h2>当前浏览器不支持串口访问</h2><p>请使用支持 Web Serial API 的桌面浏览器打开此页面。</p></div></div>
+    <div class="toast" id="serialToast" role="status" aria-live="polite"></div>
+  </body>
+</html>

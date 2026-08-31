@@ -6,6 +6,7 @@ const categoryStyles = {
 };
 
 const defaultTools = [
+  { id: "serial", name: "串口调试", url: "serial.html", description: "在浏览器中连接串口设备并收发数据", category: "developer", internal: true },
   { id: "chatgpt", name: "ChatGPT", url: "https://chatgpt.com", description: "写作、分析、编程与创意工作的 AI 助手", category: "ai" },
   { id: "claude", name: "Claude", url: "https://claude.ai", description: "长文档阅读、推理和内容协作", category: "ai" },
   { id: "github", name: "GitHub", url: "https://github.com", description: "代码托管、项目协作与自动化", category: "developer" },
@@ -51,7 +52,7 @@ function render() {
       <div class="tool-title"><h3>${escapeHtml(tool.name)}</h3><span>${categoryNames[tool.category]}</span></div>
       <button class="favorite-button ${state.favorites.has(tool.id) ? "active" : ""}" data-favorite="${tool.id}" aria-label="${state.favorites.has(tool.id) ? "取消收藏" : "收藏"}"><i data-lucide="star"></i></button></div>
       <p>${escapeHtml(tool.description)}</p>
-      <a class="tool-link" href="${escapeHtml(tool.url)}" target="_blank" rel="noopener noreferrer" data-visit="${tool.id}"><span>打开工具</span><i data-lucide="arrow-up-right"></i></a>
+      <a class="tool-link" href="${escapeHtml(tool.url)}" ${tool.internal ? "" : "target=\"_blank\" rel=\"noopener noreferrer\""} data-visit="${tool.id}"><span>打开工具</span><i data-lucide="arrow-up-right"></i></a>
     </article>`;
   }).join("");
   $("#emptyState").hidden = tools.length > 0;
