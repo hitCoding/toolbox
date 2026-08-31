@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="一个集中访问常用在线工具的个人工作台。" />
+    <meta name="theme-color" content="#f4f5f7" />
+    <title>Toolbox · 工具工作台</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://unpkg.com" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar">
+        <div class="brand">
+          <span class="brand-mark"><i data-lucide="blocks"></i></span>
+          <div><strong>Toolbox</strong><span>工具工作台</span></div>
+        </div>
+
+        <nav class="nav-list" aria-label="工具分类">
+          <button class="nav-item active" data-category="all"><i data-lucide="layout-grid"></i><span>全部工具</span><b id="allCount">0</b></button>
+          <button class="nav-item" data-category="favorite"><i data-lucide="star"></i><span>我的收藏</span><b id="favoriteCount">0</b></button>
+          <button class="nav-item" data-category="recent"><i data-lucide="history"></i><span>最近访问</span></button>
+          <p class="nav-label">分类</p>
+          <button class="nav-item" data-category="ai"><i data-lucide="sparkles"></i><span>AI 助手</span></button>
+          <button class="nav-item" data-category="developer"><i data-lucide="code-2"></i><span>开发工具</span></button>
+          <button class="nav-item" data-category="design"><i data-lucide="palette"></i><span>设计创作</span></button>
+          <button class="nav-item" data-category="office"><i data-lucide="briefcase-business"></i><span>办公协作</span></button>
+          <button class="nav-item" data-category="utility"><i data-lucide="wrench"></i><span>实用工具</span></button>
+        </nav>
+
+        <div class="sidebar-footer">
+          <button class="nav-item" id="exportButton"><i data-lucide="download"></i><span>导出配置</span></button>
+          <p>数据仅保存在此浏览器</p>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <button class="icon-button mobile-menu" id="menuButton" aria-label="打开菜单"><i data-lucide="menu"></i></button>
+          <div class="search-wrap">
+            <i data-lucide="search"></i>
+            <input id="searchInput" type="search" placeholder="搜索工具或用途..." autocomplete="off" />
+            <kbd>⌘ K</kbd>
+          </div>
+          <button class="primary-button" id="addButton"><i data-lucide="plus"></i><span>添加工具</span></button>
+        </header>
+
+        <section class="welcome-band">
+          <div>
+            <p id="dateLabel"></p>
+            <h1>今天要用什么工具？</h1>
+          </div>
+          <div class="quick-stats" aria-label="工具统计">
+            <span><b id="toolStat">0</b> 个工具</span>
+            <span><b id="visitStat">0</b> 次访问</span>
+          </div>
+        </section>
+
+        <section class="content-section">
+          <div class="section-heading">
+            <div><h2 id="sectionTitle">全部工具</h2><p id="resultLabel"></p></div>
+            <div class="view-switch" aria-label="视图切换">
+              <button class="active" data-view="grid" aria-label="网格视图" title="网格视图"><i data-lucide="grid-2x2"></i></button>
+              <button data-view="list" aria-label="列表视图" title="列表视图"><i data-lucide="list"></i></button>
+            </div>
+          </div>
+          <div class="tool-grid" id="toolGrid"></div>
+          <div class="empty-state" id="emptyState" hidden>
+            <i data-lucide="search-x"></i><h3>没有找到工具</h3><p>换个关键词，或添加一个新工具。</p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="overlay" id="overlay" hidden></div>
+    <dialog id="toolDialog">
+      <form method="dialog" id="toolForm">
+        <div class="dialog-header"><div><h2>添加工具</h2><p>把常用入口加入工作台</p></div><button class="icon-button" value="cancel" aria-label="关闭"><i data-lucide="x"></i></button></div>
+        <label>工具名称<input name="name" required maxlength="24" placeholder="例如：在线白板" /></label>
+        <label>访问地址<input name="url" required type="url" placeholder="https://example.com" /></label>
+        <label>用途说明<input name="description" required maxlength="48" placeholder="一句话说明它能做什么" /></label>
+        <label>分类<select name="category"><option value="ai">AI 助手</option><option value="developer">开发工具</option><option value="design">设计创作</option><option value="office">办公协作</option><option value="utility">实用工具</option></select></label>
+        <div class="dialog-actions"><button class="secondary-button" value="cancel">取消</button><button class="primary-button" value="default" id="saveToolButton"><i data-lucide="plus"></i>添加</button></div>
+      </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
