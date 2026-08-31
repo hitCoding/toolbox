@@ -26,6 +26,7 @@
           <button class="nav-item" data-category="recent"><i data-lucide="history"></i><span>最近访问</span></button>
           <p class="nav-label">分类</p>
           <button class="nav-item" data-category="ai"><i data-lucide="sparkles"></i><span>AI 助手</span></button>
+          <button class="nav-item" data-category="skills"><i data-lucide="blocks"></i><span>AI Skills</span></button>
           <button class="nav-item" data-category="developer"><i data-lucide="code-2"></i><span>开发工具</span></button>
           <button class="nav-item" data-category="design"><i data-lucide="palette"></i><span>设计创作</span></button>
           <button class="nav-item" data-category="office"><i data-lucide="briefcase-business"></i><span>办公协作</span></button>
@@ -83,7 +84,7 @@
         <label>工具名称<input name="name" required maxlength="24" placeholder="例如：在线白板" /></label>
         <label>访问地址<input name="url" required type="url" placeholder="https://example.com" /></label>
         <label>用途说明<input name="description" required maxlength="48" placeholder="一句话说明它能做什么" /></label>
-        <label>分类<select name="category"><option value="ai">AI 助手</option><option value="developer">开发工具</option><option value="design">设计创作</option><option value="office">办公协作</option><option value="utility">实用工具</option></select></label>
+        <label>分类<select name="category"><option value="ai">AI 助手</option><option value="skills">AI Skills</option><option value="developer">开发工具</option><option value="design">设计创作</option><option value="office">办公协作</option><option value="utility">实用工具</option></select></label>
         <div class="dialog-actions"><button class="secondary-button" type="button" data-close-dialog>取消</button><button class="primary-button" type="submit" id="saveToolButton"><i data-lucide="plus"></i>添加</button></div>
       </form>
     </dialog>
