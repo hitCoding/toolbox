@@ -90,8 +90,8 @@ $("#searchInput").addEventListener("input", event => { state.search = event.targ
 document.addEventListener("keydown", event => { if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") { event.preventDefault(); $("#searchInput").focus(); } });
 $$(".view-switch button").forEach(button => button.addEventListener("click", () => { state.view = button.dataset.view; localStorage.setItem("toolbox-view", state.view); render(); }));
 $("#addButton").addEventListener("click", () => $("#toolDialog").showModal());
+$$("[data-close-dialog]").forEach(button => button.addEventListener("click", () => $("#toolDialog").close()));
 $("#toolForm").addEventListener("submit", event => {
-  if (event.submitter?.value === "cancel") return;
   event.preventDefault(); const form = new FormData(event.currentTarget);
   const custom = readJson("toolbox-custom", []); const tool = { id: `custom-${Date.now()}`, name: form.get("name").trim(), url: form.get("url").trim(), description: form.get("description").trim(), category: form.get("category") };
   custom.push(tool); state.tools.push(tool); localStorage.setItem("toolbox-custom", JSON.stringify(custom)); event.currentTarget.reset(); $("#toolDialog").close(); render(); toast("工具已添加");
