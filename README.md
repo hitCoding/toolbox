@@ -18,7 +18,7 @@ python3 -m http.server 4173
 ```
 
 访问 <http://localhost:4173>。
-
+https://hitcoding.github.io/toolbox/
 ## 发布
 
 将仓库推送到 GitHub，在仓库 **Settings → Pages → Build and deployment** 中将 Source 设为 **GitHub Actions**。之后每次推送到 `main` 或 `master` 都会自动发布。
