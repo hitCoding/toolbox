@@ -35,7 +35,7 @@
 .session-stats dl div { display: flex; justify-content: space-between; padding: 8px 0; color: #747a84; font-size: 11px; }
 .session-stats dd { margin: 0; color: #2c3037; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
 
-.terminal-panel { min-width: 0; display: grid; grid-template-rows: 50px minmax(0, 1fr) auto; background: #15181d; }
+.terminal-panel { width: 100%; height: 100%; min-width: 0; min-height: 0; overflow: hidden; display: grid; grid-template-rows: 50px minmax(0, 1fr) auto; background: #15181d; }
 .terminal-toolbar { display: flex; align-items: center; gap: 14px; padding: 0 14px; border-bottom: 1px solid #2b2f36; color: #9da3ad; background: #202329; }
 .segmented { display: flex; border: 1px solid #3a3f48; border-radius: 5px; padding: 2px; }
 .segmented button { min-width: 52px; height: 27px; border: 0; border-radius: 3px; color: #9299a4; background: transparent; font-size: 10px; }
@@ -51,7 +51,7 @@
 .terminal-direction.tx { color: #dfa94b; }
 .system-line { color: #68727e; }
 .error-line { color: #ec7c86; }
-.send-panel { border-top: 1px solid #2b2f36; background: #202329; }
+.send-panel { min-height: 0; border-top: 1px solid #2b2f36; background: #202329; }
 .send-panel textarea { display: block; width: 100%; min-height: 70px; resize: vertical; padding: 12px 14px; border: 0; border-bottom: 1px solid #2f343d; outline: 0; color: #e3e6ea; background: #191c21; font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
 .send-panel textarea:disabled { opacity: .5; }
 .send-options { height: 48px; display: flex; align-items: center; gap: 10px; padding: 0 12px; }

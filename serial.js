@@ -12,6 +12,7 @@ let sendMode = "text";
 let rxCount = 0;
 let txCount = 0;
 let decoder = new TextDecoder();
+const maxLogLines = 5000;
 
 function refreshIcons() { if (window.lucide) window.lucide.createIcons({ attrs: { "aria-hidden": "true" } }); }
 function toast(message) { elements.serialToast.textContent = message; elements.serialToast.classList.add("visible"); clearTimeout(toast.timer); toast.timer = setTimeout(() => elements.serialToast.classList.remove("visible"), 1800); }
@@ -31,6 +32,7 @@ function appendLine(type, content) {
     const data = document.createElement("span"); data.textContent = content; line.append(direction, data);
   }
   elements.terminalOutput.append(line);
+  while (elements.terminalOutput.childElementCount > maxLogLines) elements.terminalOutput.firstElementChild.remove();
   if (elements.autoScroll.checked) elements.terminalOutput.scrollTop = elements.terminalOutput.scrollHeight;
 }
 
