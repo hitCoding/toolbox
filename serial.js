@@ -1,6 +1,6 @@
 const elements = Object.fromEntries([
   "connectButton", "disconnectButton", "connectionState", "baudRate", "dataBits", "stopBits", "parity", "flowControl",
-  "dtr", "rts", "rxBytes", "txBytes", "receiveMode", "timestamp", "autoScroll", "exportLog", "clearLog", "terminalOutput",
+  "dtr", "rts", "receiveTimeout", "rxBytes", "txBytes", "receiveMode", "timestamp", "autoScroll", "exportLog", "clearLog", "terminalOutput",
   "sendForm", "sendInput", "sendMode", "lineEnding", "sendButton", "unsupported", "serialToast"
 ].map(id => [id, document.getElementById(id)]));
 
@@ -12,7 +12,12 @@ let sendMode = "text";
 let rxCount = 0;
 let txCount = 0;
 let decoder = new TextDecoder();
+let receiveTextBuffer = "";
+let receiveHexBuffer = [];
+let receiveFlushTimer = null;
+let receiveBatchStartedAt = 0;
 const maxLogLines = 5000;
+const maxReceiveLatency = 200;
 
 function refreshIcons() { if (window.lucide) window.lucide.createIcons({ attrs: { "aria-hidden": "true" } }); }
 function toast(message) { elements.serialToast.textContent = message; elements.serialToast.classList.add("visible"); clearTimeout(toast.timer); toast.timer = setTimeout(() => elements.serialToast.classList.remove("visible"), 1800); }
@@ -36,6 +41,34 @@ function appendLine(type, content) {
   if (elements.autoScroll.checked) elements.terminalOutput.scrollTop = elements.terminalOutput.scrollHeight;
 }
 
+function flushReceiveBuffer() {
+  if (receiveFlushTimer) clearTimeout(receiveFlushTimer);
+  receiveFlushTimer = null;
+  receiveBatchStartedAt = 0;
+  const content = receiveMode === "hex" ? hex(receiveHexBuffer) : receiveTextBuffer;
+  receiveTextBuffer = "";
+  receiveHexBuffer = [];
+  if (content) appendLine("rx", content);
+}
+
+function resetReceiveBuffer() {
+  if (receiveFlushTimer) clearTimeout(receiveFlushTimer);
+  receiveFlushTimer = null;
+  receiveBatchStartedAt = 0;
+  receiveTextBuffer = "";
+  receiveHexBuffer = [];
+}
+
+function queueReceived(value) {
+  if (!receiveBatchStartedAt) receiveBatchStartedAt = performance.now();
+  if (receiveMode === "hex") receiveHexBuffer.push(...value);
+  else receiveTextBuffer += decoder.decode(value, { stream: true });
+  if (receiveFlushTimer) clearTimeout(receiveFlushTimer);
+  const timeout = Number(elements.receiveTimeout.value);
+  if (timeout === 0 || performance.now() - receiveBatchStartedAt >= maxReceiveLatency) flushReceiveBuffer();
+  else receiveFlushTimer = setTimeout(flushReceiveBuffer, timeout);
+}
+
 function setConnected(connected) {
   elements.connectionState.classList.toggle("connected", connected);
   elements.connectionState.querySelector("b").textContent = connected ? "已连接" : "未连接";
@@ -48,6 +81,8 @@ function setConnected(connected) {
 
 async function connect() {
   try {
+    resetReceiveBuffer();
+    decoder = new TextDecoder();
     port = await navigator.serial.requestPort();
     await port.open({ baudRate: Number(elements.baudRate.value), dataBits: Number(elements.dataBits.value), stopBits: Number(elements.stopBits.value), parity: elements.parity.value, flowControl: elements.flowControl.value });
     await updateSignals(); setConnected(true); appendLine("system", `串口已连接 · ${elements.baudRate.value} baud`); keepReading = true; readLoop();
@@ -63,7 +98,7 @@ async function readLoop() {
       while (keepReading) {
         const { value, done } = await reader.read();
         if (done) break;
-        if (value) { rxCount += value.byteLength; elements.rxBytes.textContent = formatBytes(rxCount); appendLine("rx", receiveMode === "hex" ? hex(value) : decoder.decode(value, { stream: true })); }
+        if (value) { rxCount += value.byteLength; elements.rxBytes.textContent = formatBytes(rxCount); queueReceived(value); }
       }
     } catch (error) { if (keepReading) appendLine("error", `读取失败：${error.message}`); }
     finally { reader.releaseLock(); reader = null; }
@@ -74,6 +109,8 @@ async function disconnect() {
   keepReading = false;
   if (reader) { try { await reader.cancel(); } catch {} }
   if (port) { try { await port.close(); } catch {} }
+  if (receiveMode === "text") receiveTextBuffer += decoder.decode();
+  flushReceiveBuffer();
   port = null; setConnected(false); appendLine("system", "串口已断开");
 }
 
@@ -116,9 +153,19 @@ elements.disconnectButton.addEventListener("click", disconnect);
 elements.sendForm.addEventListener("submit", send);
 elements.sendInput.addEventListener("keydown", event => { if (event.ctrlKey && event.key === "Enter") elements.sendForm.requestSubmit(); });
 [elements.dtr, elements.rts].forEach(input => input.addEventListener("change", updateSignals));
-bindSegmented(elements.receiveMode, mode => receiveMode = mode);
+bindSegmented(elements.receiveMode, mode => { flushReceiveBuffer(); receiveMode = mode; decoder = new TextDecoder(); });
 bindSegmented(elements.sendMode, mode => { sendMode = mode; elements.lineEnding.disabled = mode === "hex"; });
-elements.clearLog.addEventListener("click", () => { elements.terminalOutput.innerHTML = ""; appendLine("system", "日志已清空"); });
+elements.receiveTimeout.value = localStorage.getItem("serial-receive-timeout") || "20";
+elements.receiveTimeout.addEventListener("change", () => {
+  localStorage.setItem("serial-receive-timeout", elements.receiveTimeout.value);
+  if (receiveFlushTimer) {
+    clearTimeout(receiveFlushTimer);
+    const timeout = Number(elements.receiveTimeout.value);
+    if (timeout === 0) flushReceiveBuffer();
+    else receiveFlushTimer = setTimeout(flushReceiveBuffer, timeout);
+  }
+});
+elements.clearLog.addEventListener("click", () => { resetReceiveBuffer(); elements.terminalOutput.innerHTML = ""; appendLine("system", "日志已清空"); });
 elements.exportLog.addEventListener("click", () => {
   const blob = new Blob([elements.terminalOutput.innerText], { type: "text/plain;charset=utf-8" });
   const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = `serial-${new Date().toISOString().replace(/[:.]/g, "-")}.log`; link.click(); URL.revokeObjectURL(link.href);

@@ -7,9 +7,9 @@
     <title>串口调试 · Toolbox</title>
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="serial.css?v=20261013-1" />
+    <link rel="stylesheet" href="serial.css?v=20261015-1" />
     <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
-    <script src="serial.js?v=20261013-1" defer></script>
+    <script src="serial.js?v=20261015-1" defer></script>
   </head>
   <body class="serial-body">
     <header class="serial-header">
@@ -37,6 +37,20 @@
           <div class="panel-title"><h2>控制信号</h2><i data-lucide="circuit-board"></i></div>
           <label class="switch-row"><span><b>DTR</b><small>Data Terminal Ready</small></span><input type="checkbox" id="dtr" /><i></i></label>
           <label class="switch-row"><span><b>RTS</b><small>Request To Send</small></span><input type="checkbox" id="rts" /><i></i></label>
+        </section>
+        <section class="receive-settings">
+          <div class="panel-title"><h2>接收设置</h2><i data-lucide="timer"></i></div>
+          <label>数据合并间隔
+            <select id="receiveTimeout">
+              <option value="0">实时（0 ms）</option>
+              <option value="10">10 ms</option>
+              <option value="20" selected>20 ms</option>
+              <option value="50">50 ms</option>
+              <option value="100">100 ms</option>
+              <option value="200">200 ms</option>
+            </select>
+          </label>
+          <p class="setting-hint">间隔内连续收到的数据合并为一条记录。</p>
         </section>
         <section class="session-stats">
           <div class="panel-title"><h2>会话统计</h2><i data-lucide="activity"></i></div>

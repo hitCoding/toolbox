@@ -21,6 +21,7 @@
 .serial-settings label { display: grid; gap: 6px; margin-top: 12px; color: #606570; font-size: 11px; }
 .serial-settings select, .send-options select { height: 36px; padding: 0 9px; border: 1px solid #d7dae0; border-radius: 5px; color: #24272d; background: #fff; outline: none; }
 .serial-settings select:focus, .send-options select:focus { border-color: #176b5b; }
+.setting-hint { margin: 8px 0 0; color: #8b9099; font-size: 9px; line-height: 1.5; }
 .field-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .switch-row { grid-template-columns: 1fr auto !important; align-items: center; cursor: pointer; }
 .switch-row span b, .switch-row span small { display: block; }
@@ -74,6 +75,7 @@
   .serial-workspace { height: auto; min-height: calc(100vh - 64px); grid-template-columns: 1fr; }
   .serial-settings { display: grid; grid-template-columns: 1fr 1fr; border-right: 0; }
   .serial-settings section { padding: 15px; }
+  .serial-settings .receive-settings { grid-column: 1 / -1; }
   .serial-settings .session-stats { display: none; }
   .terminal-panel { min-height: 620px; }
   .check-control { display: none; }
